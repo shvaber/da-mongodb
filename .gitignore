@@ -1,0 +1,7 @@
+available_version.txt
+data/sso/*.conf
+exec/move_uploaded_file
+exec/test_php.php
+logs/*
+mongodb.so
+pgpass.conf

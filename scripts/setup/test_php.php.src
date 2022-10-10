@@ -1,0 +1,99 @@
+#!/usr/local/bin/php -nc/usr/local/directadmin/plugins/mongodb/php.ini
+<?php
+######################################################################################
+#
+#   MongoDB integration for DirectAdmin $ 0.2
+#   ==============================================================================
+#          Last modified: Mon Feb 10 12:44:48 +07 2020
+#   ==============================================================================
+#         Written by Alex Grebenschikov, Poralix, www.poralix.com
+#         Copyright 2019 by Alex Grebenschikov, Poralix, www.poralix.com
+#   ==============================================================================
+#
+#   LICENSE:
+#   SOURCE CODE AND SCRIPTING POLICY
+#
+#   1.Purchase of the source code or scripting, coding means that
+#   you have the license rights but you do not own the code.
+#   Poralix grants to you one (1) personal, nontransferable,
+#   royalty-free license to make and use copies of the source code
+#   and install such source code on any number of servers for his
+#   internal use. You may not redistribute the source code, or any
+#   component thereof, whether modified or not to any third party.
+#
+#   2.Source code usage is for your personal use or for your company.
+#   It is not to be shared with other parties.
+#
+#   3.You are not allowed to resell, transfer, rent, lease, or
+#   sublicense the source code and associated rights.
+#
+#   4.Under no circumstances may any portion of the source code or
+#   any modified version or derivative work of the source code be
+#   distributed, disclosed or otherwise made available to any third
+#   party.
+#
+#   5.Customer is allowed only to modify it for his own usage only.
+#
+#   6.If you'd want to resell the Software, we have special terms and
+#   price is increased accordingly.
+#
+#   7.The Software or any part of its code cannot be used as a basis
+#   for a competing control panel, server management system, or
+#   similar product.
+#
+#   8.If you sell your business including the Software source codes
+#   both the seller and buyer MUST contact Poralix for code transfer.
+#
+#   This page is an obligatory part of the Terms of Service for
+#   Server Management Clients and all extended policies posted
+#   here should be agreed and accepted prior to signing up with
+#   our service.
+#
+#   Source Code and Scripting Policy:
+#   https://www.poralix.com/user-area/source-code-and-scripting-policy/
+#
+######################################################################################
+
+?>
+<?php
+
+if (!extension_loaded('mongodb'))
+{
+    echo "[ERROR] mongodb module is not loaded...\n";
+    exit(1);
+}
+else
+{
+    echo "[OK] The mongodb module is loaded\n";
+}
+
+
+if (!class_exists('MongoDB\Driver\Manager'))
+{
+    echo "[ERROR] MongoDB\Driver\Manager is not available...\n";
+    exit(1);
+}
+else
+{
+    echo "[OK] MongoDB\Driver\Manager is available\n";
+}
+
+$mongo = new MongoDB\Driver\Manager("mongodb://|USERNAME|:|PASSWORD|@localhost:27017");
+if ($mongo)
+{
+    $listdatabases = new MongoDB\Driver\Command(["listDatabases" => 1]);
+    $res = $mongo->executeCommand("admin", $listdatabases);
+    $databases = current($res->toArray());
+    if (is_object($databases) && $databases)
+    {
+        echo "[OK] Connected to MongoDB server as |USERNAME| fine\n";
+        exit(0);
+    }
+    else
+    {
+        echo "[ERROR] Failed to test connection to MongoDB server as |USERNAME|\n";
+        exit(1);
+    }
+}
+echo "[ERROR] Failed to connect to MongoDB server as |USERNAME|\n";
+exit(1);
