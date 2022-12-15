@@ -44,7 +44,13 @@ $0 <da_user> <backup_file>
 
 da_import_data()
 {
-    tar -zxf "${1}" -C "${2}" "backup/mongodb/" --strip-components=1;
+    c=$(echo "${1}" | grep -c '\.tar\.gz$');
+    [ "1" == "${c}" ] && tar -zxf "${1}" -C "${2}" "backup/mongodb/" --strip-components=1;
+    
+    c=$(echo "${1}" | grep -c '\.tar\.zst$');
+    [ "1" == "${c}" ] && tar --use-compress-program=unzstd -xf "${1}" -C "${2}" "backup/psmongodbql/" --strip-components=1;
+
+    #tar -zxf "${1}" -C "${2}" "backup/mongodb/" --strip-components=1;
     IMPORT_DIR="${2}/mongodb";
     if [ -d "${IMPORT_DIR}" ];
     then
